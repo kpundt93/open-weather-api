@@ -7,10 +7,11 @@ import { Weather } from "./js/weather";
 $(document).ready(function() {
   $('#weatherLocation').click(function() {
     const city = $('#location').val();
+    const zip = $('#zip').val();
     $('#location').val("");
 
     let request = new XMLHttpRequest();
-    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`;
+    const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&zip=${zip}&appid=${process.env.API_KEY}`; 
 
     request.onreadystatechange = function() {
       if (this.readyState === 4 && this.status === 200) {
@@ -29,8 +30,6 @@ $(document).ready(function() {
       const fahrenheitMax = Math.round((((response.main.temp_max-273.15)*1.8)+32));
       const sunrise = new Date(response.sys.sunrise * 1000);
       const sunset= new Date(response.sys.sunset * 1000);
-      // const sunrise = Math.round((((response.main.temp_max-273.15)*1.8)+32));
-      // const sunset = Math.round((((response.main.temp_max-273.15)*1.8)+32));
       $('.showHumidity').text(`The humidity in ${city} is ${response.main.humidity}%`);
       $('.showTemp').text(`The temperature in Fahrenheit is ${fahrenheit} degrees(F).`);
       $('.showTempFeels').text(`It currently feels like ${fahrenheitFeels} degrees(F).`);
