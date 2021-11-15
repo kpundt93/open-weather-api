@@ -2,6 +2,7 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/styles.css';
+import { Weather } from "./js/weather";
 
 $(document).ready(function() {
   $('#weatherLocation').click(function() {
@@ -22,8 +23,9 @@ $(document).ready(function() {
     request.send();
 
    function getElements(response) {
+      const fahrenheit = Math.round((((response.main.temp-273.15)*1.8)+32));
       $('.showHumidity').text(`The humidity in ${city} is ${response.main.humidity}%`);
-      $('.showTemp').text(`The temperature in Kelvins is ${response.main.temp} degrees.`);
+      $('.showTemp').text(`The temperature in Fahrenheit is ${fahrenheit} degrees.`);
     }
   });
 });
