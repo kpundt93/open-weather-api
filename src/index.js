@@ -2,32 +2,28 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/styles.css';
-import { Weather } from "./js/weather";
+import WeatherService from "./js/weather-service";
+
+function clearFields() {
+  $('#location').val("");
+  $('#zip').val("");
+  $('.showHumidity').text("");
+  $('.showTemp').text("");
+  $('.showTempFeels').text("");
+  $('.showTempMin').text("");
+  $('.showTempMax').text("");
+  $('.windSpeed').text("");
+  $('.sunrise').text("");
+  $('.sunset').text("");
+  $('.showErrors').text("");
+}
 
 $(document).ready(function() {
   $('#weatherLocation').click(function() {
-    const city = $('#location').val();
-    const zip = $('#zip').val();
-
-    $('#location').val("");
-    $('#zip').val("");
-
-    let promise = new Promise(function(resolve, reject) {
-      let request = new XMLHttpRequest();
-      const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&zip=${zip}&appid=${process.env.API_KEY}`; 
-      request.onload = function() {
-        if (this.status === 200) {
-          resolve(request.response);
-        } else {
-          reject(request.response);
-        }
-      }
-      request.open("GET", url, true);
-      request.send();
-    });
-    
-    
-
+    let city = $('#location').val();
+    let zip = $('#zip').val();
+    clearFields();
+    let promise = WeatherService.getWeather(city, zip);
     promise.then(function(response) {
       const body = JSON.parse(response);
       const fahrenheit = Math.round((((body.main.temp-273.15)*1.8)+32));
@@ -44,17 +40,8 @@ $(document).ready(function() {
       $('.windSpeed').text(`Current wind speed is ${body.wind.speed} mph`);
       $('.sunrise').text(`Sunrise at ${sunrise}`);
       $('.sunset').text(`Sunset at ${sunset}`);
-      $('.showErrors').text("");
     }, function(error) {
       $('.showErrors').text(`There was an error processing your request: ${error}`);
-      $('.showHumidity').text("");
-      $('.showTemp').text("");
-      $('.showTempFeels').text("");
-      $('.showTempMin').text("");
-      $('.showTempMax').text("");
-      $('.windSpeed').text("");
-      $('.sunrise').text("");
-      $('.sunset').text("");
-    });
+    });    
   });
 });
