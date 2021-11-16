@@ -8,11 +8,12 @@ $(document).ready(function() {
   $('#weatherLocation').click(function() {
     const city = $('#location').val();
     const zip = $('#zip').val();
+
     $('#location').val("");
 
     let request = new XMLHttpRequest();
     const url = `http://api.openweathermap.org/data/2.5/weather?q=${city}&zip=${zip}&appid=${process.env.API_KEY}`; 
-
+    
     request.onreadystatechange = function() {
       if (this.readyState === 4 && this.status === 200) {
         const response = JSON.parse(this.responseText);
@@ -23,7 +24,7 @@ $(document).ready(function() {
     request.open("GET", url, true);
     request.send();
 
-   function getElements(response) {
+    function getElements(response) {
       const fahrenheit = Math.round((((response.main.temp-273.15)*1.8)+32));
       const fahrenheitFeels = Math.round((((response.main.feels_like-273.15)*1.8)+32));
       const fahrenheitMin = Math.round((((response.main.temp_min-273.15)*1.8)+32));
